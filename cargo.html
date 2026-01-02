@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CarGo - Car Rental Service</title>
+<style>
+/* Global Styles */
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: 'Arial', sans-serif;
+}
+:root {
+--primary: #2c3e50;
+--secondary: #3498db;
+--accent: #e74c3c;
+--light: #ecf0f1;
+--dark: #2c3e50;
+--success: #27ae60;
+}
+body {
+background-color: #f5f5f5;
+color: var(--dark);
+line-height: 1.6;
+}
+.container {
+width: 90%;
+max-width: 1200px;
+margin: 0 auto;
+padding: 0 20px;
+}
+.page {
+display: none;
+min-height: 100vh;
+padding-top: 80px;
+}
+.page.active {
+display: block;
+}
+/* Header Styles */
+header {
+background-color: var(--primary);
+color: white;
+padding: 20px 0;
+box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+position: fixed;
+width: 100%;
+top: 0;
+z-index: 1000;
+}
+.header-container {
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+.logo {
+font-size: 24px;
+font-weight: 700;
+color: white;
+text-decoration: none;
+}
+.logo span {
+color: var(--secondary);
+}
+nav ul {
+display: flex;
+list-style: none;
+}
+nav ul li {
+margin-left: 20px;
+}
+nav ul li a {
+color: white;
+text-decoration: none;
+font-weight: 500;
+transition: color 0.3s;
+cursor: pointer;
+}
+nav ul li a:hover {
+color: var(--secondary);
+}
+.auth-buttons .btn {
+margin-left: 10px;
+}
+/* Button Styles */
+.btn {
+display: inline-block;
+padding: 10px 20px;
+background-color: var(--secondary);
+color: white;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+text-decoration: none;
+font-weight: 500;
+transition: all 0.3s;
+}
+.btn:hover {
+background-color: #2980b9;
+transform: translateY(-2px);
+}
+.btn-outline {
+background-color: transparent;
+border: 2px solid var(--secondary);
+color: var(--secondary);
+}
+.btn-outline:hover {
+background-color: var(--secondary);
+color: white;
+}
+.btn-accent {
+background-color: var(--accent);
+}
+.btn-accent:hover {
+background-color: #c0392b;
+}
+.btn-large {
+padding: 12px 30px;
+font-size: 18px;
+}
+/* Hero Section */
+.hero {
+height: calc(100vh - 80px);
+background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+url('https://images.unsplash.com/photo-1502877338535-766e1452684a?ixlib=rb1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+color: white;
+display: flex;
+align-items: center;
+text-align: center;
+}
+.hero-content {
+max-width: 800px;
+margin: 0 auto;
+}
+.hero h1 {
+font-size: 48px;
+margin-bottom: 20px;
+}
+.hero p {
+font-size: 20px;
+margin-bottom: 30px;
+}
+/* Search Form */
+.search-form {
+background-color: white;
+padding: 30px;
+border-radius: 10px;
+box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+margin-top: 30px;
+}
+.form-group {
+margin-bottom: 20px;
+}
+.form-group label {
+display: block;
+margin-bottom: 8px;
+font-weight: 500;
+color: var(--dark);
+}
+.form-control {
+width: 100%;
+padding: 12px;
+border: 1px solid #ddd;
+border-radius: 5px;
+font-size: 16px;
+}
+.form-row {
+display: flex;
+gap: 20px;
+}
+.form-row .form-group {
+flex: 1;
+}
+/* Features Section */
+.features {
+padding: 80px 0;
+background-color: white;
+}
+.section-title {
+text-align: center;
+margin-bottom: 50px;
+}
+.section-title h2 {
+font-size: 36px;
+color: var(--primary);
+margin-bottom: 15px;
+}
+.section-title p {
+color: #777;
+max-width: 700px;
+margin: 0 auto;
+}
+.features-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: 30px;
+}
+.feature-card {
+background-color: var(--light);
+padding: 30px;
+border-radius: 10px;
+text-align: center;
+transition: transform 0.3s;
+}
+.feature-card:hover {
+transform: translateY(-10px);
+}
+.feature-icon {
+font-size: 40px;
+color: var(--secondary);
+margin-bottom: 20px;
+}
+.feature-card h3 {
+font-size: 20px;
+margin-bottom: 15px;
+color: var(--primary);
+}
+/* Cars Section */
+.cars {
+padding: 80px 0;
+background-color: #f9f9f9;
+}
+.cars-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+gap: 30px;
+}
+.car-card {
+background-color: white;
+border-radius: 10px;
+overflow: hidden;
+box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+transition: transform 0.3s;
+}
+.car-card:hover {
+transform: translateY(-10px);
+}
+.car-img {
+height: 180px;
+overflow: hidden;
+}
+.car-img img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+transition: transform 0.5s;
+}
+.car-card:hover .car-img img {
+transform: scale(1.1);
+}
+.car-info {
+padding: 20px;
+}
+.car-info h3 {
+font-size: 20px;
+margin-bottom: 10px;
+color: var(--primary);
+}
+.car-specs {
+display: flex;
+justify-content: space-between;
+margin-bottom: 15px;
+color: #777;
+font-size: 14px;
+}
+.car-price {
+font-size: 22px;
+font-weight: 700;
+color: var(--primary);
+margin-bottom: 15px;
+}
+.car-price span {
+font-size: 14px;
+font-weight: 400;
+color: #777;
+}
+/* Login/Signup Pages */
+.auth-page {
+display: flex;
+align-items: center;
+justify-content: center;
+min-height: calc(100vh - 80px);
+background-color: #f5f5f5;
+}
+.auth-container {
+background-color: white;
+padding: 40px;
+border-radius: 10px;
+box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+width: 100%;
+max-width: 500px;
+}
+.auth-title {
+text-align: center;
+margin-bottom: 30px;
+color: var(--primary);
+}
+.auth-form .form-group {
+margin-bottom: 20px;
+}
+.auth-form .btn {
+width: 100%;
+padding: 12px;
+font-size: 16px;
+}
+.auth-footer {
+text-align: center;
+margin-top: 20px;
+}
+.auth-footer a {
+color: var(--secondary);
+text-decoration: none;
+}
+.auth-footer a:hover {
+text-decoration: underline;
+}
+/* Booking Page */
+.booking-page {
+padding: 40px 0;
+}
+.booking-container {
+background-color: white;
+border-radius: 10px;
+box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+overflow: hidden;
+}
+.booking-header {
+background-color: var(--primary);
+color: white;
+padding: 20px;
+}
+.booking-header h2 {
+font-size: 24px;
+}
+.booking-content {
+display: flex;
+flex-wrap: wrap;
+}
+.booking-form {
+flex: 1;
+min-width: 300px;
+padding: 30px;
+}
+.booking-summary {
+flex: 1;
+min-width: 300px;
+padding: 30px;
+background-color: #f9f9f9;
+}
+.booking-summary h3 {
+margin-bottom: 20px;
+color: var(--primary);
+}
+.summary-item {
+display: flex;
+justify-content: space-between;
+margin-bottom: 15px;
+padding-bottom: 15px;
+border-bottom: 1px solid #eee;
+}
+.summary-total {
+font-weight: 700;
+font-size: 18px;
+margin-top: 20px;
+}
+.car-image {
+width: 100%;
+height: 200px;
+object-fit: cover;
+border-radius: 5px;
+margin-bottom: 20px;
+}
+/* Footer */
+footer {
+background-color: var(--primary);
+color: white;
+padding: 40px 0 20px;
+}
+.footer-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+gap: 30px;
+margin-bottom: 30px;
+}
+.footer-col h3 {
+font-size: 18px;
+margin-bottom: 20px;
+color: var(--secondary);
+}
+.footer-col ul {
+list-style: none;
+}
+.footer-col ul li {
+margin-bottom: 10px;
+}
+.footer-col ul li a {
+color: #ddd;
+text-decoration: none;
+transition: color 0.3s;
+}
+.footer-col ul li a:hover {
+color: var(--secondary);
+}
+.footer-bottom {
+text-align: center;
+padding-top: 20px;
+border-top: 1px solid rgba(255, 255, 255, 0.1);
+color: #ddd;
+font-size: 14px;
+}
+/* Responsive Styles */
+@media (max-width: 768px) {
+.header-container {
+flex-direction: column;
+text-align: center;
+}
+nav ul {
+margin-top: 15px;
+justify-content: center;
+}
+nav ul li {
+margin: 0 10px;
+}
+.auth-buttons {
+margin-top: 15px;
+}
+.hero h1 {
+font-size: 36px;
+}
+.hero p {
+font-size: 18px;
+}
+.form-row {
+flex-direction: column;
+gap: 0;
+}
+.booking-content {
+flex-direction: column;
+}
+}
+@media (max-width: 480px) {
+.hero h1 {
+font-size: 30px;
+}
+.auth-container {
+padding: 30px 20px;
+}
+}
+</style>
+</head>
+<body>
+<!-- Header -->
+<header>
+<div class="container header-container">
+<a href="#" class="logo" onclick="showPage('home')">Car<span>Go</span></a>
+<nav>
+<ul>
+<li><a onclick="showPage('home')">Home</a></li>
+<li><a onclick="showPage('cars')">Cars</a></li>
+<li><a onclick="showPage('features')">Features</a></li>
+<li><a onclick="showPage('booking')">Booking</a></li>
+</ul>
+</nav>
+<div class="auth-buttons">
+<a class="btn btn-outline" onclick="showPage('login')">Login</a>
+<a class="btn" onclick="showPage('signup')">Sign Up</a>
+</div>
+</div>
+</header>
+<!-- Home Page -->
+<section class="page active" id="home-page">
+<div class="hero">
+<div class="container">
+<div class="hero-content">
+<h1>Rent The Perfect Car For Your Needs</h1>
+<p>Choose from our wide selection of vehicles at competitive prices with
+exceptional service.</p>
+<a href="#" class="btn btn-accent btn-large"
+onclick="showPage('cars')">Browse Cars</a>
+<!-- Search Form -->
+<div class="search-form">
+<div class="form-row">
+<div class="form-group">
+<label for="pickup-location">Pickup Location</label>
+<select id="pickup-location" class="form-control">
+<option value="">Select location</option>
+<option value="Central Nashik">Central Nashik</option>
+<option value="Outside Nashik">Outside Nashik</option>
+<option value="Old Nashik">Old Nashik</option>
+</select>
+</div>
+<div class="form-group">
+<label for="pickup-date">Pickup Date</label>
+<input type="date" id="pickup-date" class="form-control">
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="return-date">Return Date</label>
+<input type="date" id="return-date" class="form-control">
+</div>
+<div class="form-group">
+<label for="car-type">Car Type</label>
+<select id="car-type" class="form-control">
+<option value="">Any Type</option>
+<option value="economy">Economy</option>
+<option value="sedan">Sedan</option>
+<option value="suv">SUV</option>
+<option value="luxury">Luxury</option>
+</select>
+</div>
+</div>
+<button class="btn" style="width: 100%;"
+onclick="showPage('cars')">Search Cars</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Features Section -->
+<section class="features">
+<div class="container">
+<div class="section-title">
+<h2>Why Choose CarGo</h2>
+<p>We offer the best car rental experience with our premium services and
+customer-focused approach.</p>
+</div>
+<div class="features-grid">
+<div class="feature-card">
+<div class="feature-icon"> </div>
+<h3>Wide Selection</h3>
+<p>Choose from economy cars to luxury SUVs and everything in
+between.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon"> </div>
+<h3>Best Prices</h3>
+<p>Competitive pricing with no hidden fees and price match guarantee.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon"> </div>
+<h3>Full Insurance</h3>
+<p>Comprehensive coverage included with every rental for your peace of
+mind.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon"> </div>
+<h3>Easy Booking</h3>
+<p>Simple online booking process that takes just a few minutes.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Popular Cars Section -->
+<section class="cars">
+<div class="container">
+<div class="section-title">
+<h2>Popular Cars</h2>
+<p>Browse our most popular rental vehicles</p>
+</div>
+<div class="cars-grid">
+<div class="car-card">
+<div class="car-img">
+<img src= "Mahindra-Scorpio-N-Z8-Select-Launched.jpg"Socorpio N">
+</div>
+<div class="car-info">
+<h3>Socorpio N </h3>
+<div class="car-specs">
+<span>Automatic</span>
+<span>5 Seats</span>
+<span>Petrol</span>
+</div>
+<div class="car-price">
+₹6800/day
+</div>
+<button class="btn btn-outline" onclick="showPage('booking')">Book
+Now</button>
+</div>
+</div>
+<div class="car-card">
+<div class="car-img">
+<img src="skoda-kodiaq-rear-wheels-doors.webp" alt="Skoda kodiaq">
+</div>
+<div class="car-info">
+<h3>Skoda kodiaq</h3>
+<div class="car-specs">
+<span>Automatic</span>
+<span>5 Seats</span>
+<span>Petrol</span>
+</div>
+<div class="car-price">
+₹7500/day
+</div>
+<button class="btn btn-outline" onclick="showPage('booking')">Book
+Now</button>
+</div>
+</div>
+<div class="car-card">
+<div class="car-img">
+<img src="volkswagen-virtus-brazil.webp"volkswagen virtus">
+</div>
+<div class="car-info">
+<h3>volkswagen virtus</h3>
+<div class="car-specs">
+<span>Automatic</span>
+<span>7 Seats</span>
+<span>Diesel</span>
+</div>
+<div class="car-price">
+₹6200/day
+</div>
+<button class="btn btn-outline" onclick="showPage('booking')">Book
+Now</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer>
+<div class="container">
+<div class="footer-grid">
+<div class="footer-col">
+<h3>CarGo</h3>
+<p>Premium car rental service offering the best vehicles at competitive
+prices.</p>
+</div>
+<div class="footer-col">
+<h3>Quick Links</h3>
+<ul>
+<li><a onclick="showPage('home')">Home</a></li>
+<li><a onclick="showPage('cars')">Cars</a></li>
+<li><a onclick="showPage('features')">Features</a></li>
+<li><a onclick="showPage('booking')">Booking</a></li>
+</ul>
+</div>
+<div class="footer-col">
+<h3>Contact Us</h3>
+<ul>
+<li>123 Rental Street, City</li>
+<li>info@CARGO.com</li>
+<li>+1 (555) 123-4567</li>
+</ul>
+</div>
+</div>
+<div class="footer-bottom">
+<p>&copy; 2023 CARGO. All Rights Reserved.</p>
+</div>
+</div>
+</footer>
+</section>
+<!-- Login Page -->
+<section class="page" id="login-page">
+<div class="auth-page">
+<div class="container">
+<div class="auth-container">
+<h2 class="auth-title">Login to Your Account</h2>
+<form class="auth-form" id="login-form">
+<div class="form-group">
+<label for="login-email">Email Address</label>
+<input type="email" id="login-email" class="form-control" required>
+</div>
+<div class="form-group">
+<label for="login-password">Password</label>
+<input type="password" id="login-password" class="form-control"
+required>
+</div>
+<button type="submit" class="btn">Login</button>
+</form>
+<div class="auth-footer">
+<p>Don't have an account? <a onclick="showPage('signup')">Sign
+up</a></p>
+<p><a href="#">Forgot password?</a></p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Signup Page -->
+<section class="page" id="signup-page">
+<div class="auth-page">
+<div class="container">
+<div class="auth-container">
+<h2 class="auth-title">Create an Account</h2>
+<form class="auth-form" id="signup-form">
+<div class="form-group">
+<label for="signup-name">Full Name</label>
+<input type="text" id="signup-name" class="form-control" required>
+</div>
+<div class="form-group">
+<label for="signup-email">Email Address</label>
+<input type="email" id="signup-email" class="form-control" required>
+</div>
+<div class="form-group">
+<label for="signup-password">Password</label>
+<input type="password" id="signup-password" class="form-control"
+required>
+</div>
+<div class="form-group">
+<label for="signup-confirm">Confirm Password</label>
+<input type="password" id="signup-confirm" class="form-control"
+required>
+</div>
+<button type="submit" class="btn">Create Account</button>
+</form>
+<div class="auth-footer">
+<p>Already have an account? <a onclick="showPage('login')">Login</a></p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Cars Page -->
+<section class="page" id="cars-page">
+<section class="cars">
+<div class="container">
+<div class="section-title">
+<h2>Our Fleet</h2>
+<p>Choose from our wide selection of vehicles</p>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="filter-type">Car Type</label>
+<select id="filter-type" class="form-control">
+<option value="">All Types</option>
+<option value="economy">Economy</option>
+<option value="sedan">Sedan</option>
+<option value="suv">SUV</option>
+<option value="luxury">Luxury</option>
+</select>
+</div>
+<div class="form-group">
+<label for="filter-price">Price Range</label>
+<select id="filter-price" class="form-control">
+<option value="">Any Price</option>
+<option value="2000-3000">₹2000 - ₹3000</option>
+<option value="3000-5000">₹3000 - ₹5000</option>
+<option value="5000-8000">₹5000 - ₹8000</option>
+<option value="8000+">₹8000+</option>
+</select>
+</div>
+</div>
+<div class="cars-grid">
+<div class="car-card">
+<div class="car-img">
+<img src="hycross.png" alt="Toyota Crysta">
+</div>
+<div class="car-info">
+<h3>Toyota Crysta</h3>
+<div class="car-specs">
+<span>Automatic</span>
+<span>5 Seats</span>
+<span>Petrol</span>
+</div>
+<div class="car-price">
+₹6000/day
+</div>
+<button class="btn btn-outline" onclick="showPage('booking')">Book
+Now</button>
+</div>
+</div>
+<div class="car-card">
+<div class="car-img">
+<img src="4t060hb_1863570.avif" alt="Tata Harrier">
+</div>
+<div class="car-info">
+<h3>Tata Harrier</h3>
+<div class="car-specs">
+<span>Automatic</span>
+<span>5 Seats</span>
+<span>Petrol</span>
+</div>
+<div class="car-price">
+₹5500/day
+</div>
+<button class="btn btn-outline" onclick="showPage('booking')">Book
+Now</button>
+</div>
+</div>
+<div class="car-card">
+<div class="car-img">
+<img src="city.jpg" alt="Honda City">
+</div>
+<div class="car-info">
+<h3>Honda City</h3>
+<div class="car-specs">
+<span>Automatic</span>
+<span>7 Seats</span>
+<span>Diesel</span>
+</div>
+<div class="car-price">
+₹4500/day
+</div>
+<button class="btn btn-outline" onclick="showPage('booking')">Book
+Now</button>
+</div>
+</div>
+<div class="car-card">
+<div class="car-img">
+<img src="maruti-suzuki-dzire_colours_splendid-silver_1967f040 1.jpg"Swift Dezire">
+</div>
+<div class="car-info">
+<h3>Swift Dezire</h3>
+<div class="car-specs">
+<span>Automatic</span>
+<span>5 Seats</span>
+<span>Petrol</span>
+</div>
+<div class="car-price">
+₹3500/day
+</div>
+<button class="btn btn-outline" onclick="showPage('booking')">Book
+Now</button>
+</div>
+</div>
+<div class="car-card">
+<div class="car-img">
+<img src="next-gen-ertiga-colour-pearl-arctic-white (1).jpgg" alt="Maruti ">
+</div>
+<div class="car-info">
+<h3>Maruti Ertiga</h3>
+<div class="car-specs">
+<span>Automatic</span>
+<span>5 Seats</span>
+<span>Electric</span>
+</div>
+<div class="car-price">
+₹4500/day
+</div>
+<button class="btn btn-outline" onclick="showPage('booking')">Book
+Now</button>
+</div>
+</div>
+<div class="car-card">
+<div class="car-img">
+<img src="download.jfif" alt="Tata Punch">
+</div>
+<div class="car-info">
+<h3>Tata Punch</h3>
+<div class="car-specs">
+<span>Manual</span>
+<span>5 Seats</span>
+<span>Petrol</span>
+</div>
+<div class="car-price">
+₹4200/day
+</div>
+<button class="btn btn-outline" onclick="showPage('booking')">Book
+Now</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<!-- Features Page -->
+<section class="page" id="features-page">
+<section class="features">
+<div class="container">
+<div class="section-title">
+<h2>Our Features</h2>
+<p>Discover what makes CarGo the best choice for your car rental needs</p>
+</div>
+<div class="features-grid">
+<div class="feature-card">
+<div class="feature-icon"> </div>
+<h3>Wide Selection</h3>
+<p>Choose from our diverse fleet of vehicles ranging from economy cars to
+luxury SUVs.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon"> </div>
+<h3>Best Prices</h3>
+<p>Competitive pricing with no hidden fees and guaranteed lowest
+prices.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon"> </div>
+<h3>24/7 Support</h3>
+<p>Our customer service team is available round the clock to assist
+you.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon"> </div>
+<h3>Flexible Rentals</h3>
+<p>Change or cancel your booking anytime with our flexible rental
+policies.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon"> </div>
+<h3>Full Insurance</h3>
+<p>Comprehensive insurance coverage included with every rental.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon"> </div>
+<h3>Free Fuel</h3>
+<p>Enjoy free fuel with all our premium rental packages.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<!-- Booking Page -->
+<section class="page" id="booking-page">
+<div class="booking-page">
+<div class="container">
+<div class="booking-container">
+<div class="booking-header">
+<h2>Book Your Car</h2>
+</div>
+<div class="booking-content">
+<div class="booking-form">
+<h3>Personal Information</h3>
+<form id="booking-form">
+<div class="form-group">
+<label for="booking-name">Full Name</label>
+<input type="text" id="booking-name" class="form-control" required>
+</div>
+<div class="form-group">
+<label for="booking-email">Email Address</label>
+<input type="email" id="booking-email" class="form-control"
+required>
+</div>
+<div class="form-group">
+<label for="booking-phone">Phone Number</label>
+<input type="tel" id="booking-phone" class="form-control" required>
+</div>
+<div class="form-group">
+<label for="booking-address">Address</label>
+<input type="text" id="booking-address" class="form-control"
+required>
+</div>
+<h3 style="margin-top: 30px;">Rental Details</h3>
+<div class="form-row">
+<div class="form-group">
+<label for="booking-pickup-date">Pickup Date</label>
+<input type="date" id="booking-pickup-date" class="form-control"
+required>
+</div>
+<div class="form-group">
+<label for="booking-return-date">Return Date</label>
+<input type="date" id="booking-return-date" class="form-control"
+required>
+</div>
+</div>
+<div class="form-group">
+<label for="booking-pickup-location">Pickup Location</label>
+<select id="booking-pickup-location" class="form-control" required>
+<option value="">Select location</option>
+<option value="airport">Central Nashik</option>
+<option value="downtown">Outside Nashik</option>
+<option value="train-station">Old Nashik</option>
+</select>
+</div>
+<h3 style="margin-top: 30px;">Payment Information</h3>
+<div class="form-group">
+<label for="booking-card">Card Number</label>
+<input type="text" id="booking-card" class="form-control" required>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="booking-expiry">Expiry Date</label>
+<input type="text" id="booking-expiry" class="form-control"
+placeholder="MM/YY" required>
+</div>
+<div class="form-group">
+<label for="booking-cvv">CVV</label>
+<input type="text" id="booking-cvv" class="form-control" required>
+</div>
+</div>
+<div class="form-group">
+<label for="booking-card-name">Name on Card</label>
+<input type="text" id="booking-card-name" class="form-control"
+required>
+</div>
+<button type="submit" class="btn" style="width: 100%; margin-top:
+20px;">Complete Booking</button>
+</form>
+</div>
+<div class="booking-summary">
+<img src="crysta-2-e1585975967483.jpg" alt="Toyota Crysta" class="carimage">
+<h3>Toyota Crysta</h3>
+<div class="summary-item">
+<span>Rental Duration</span>
+<span>3 days</span>
+</div>
+<div class="summary-item">
+<span>Daily Rate</span>
+<span>₹6000/day</span>
+</div>
+<div class="summary-item">
+<span>Insurance</span>
+<span>₹500</span>
+</div>
+<div class="summary-item">
+<span>Taxes & Fees</span>
+<span>₹700</span>
+</div>
+<div class="summary-item summary-total">
+<span>Total</span>
+<span>₹18200</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<script>
+// Simple page navigation
+function showPage(pageId) {
+// Hide all pages
+document.querySelectorAll('.page').forEach(page => {
+page.classList.remove('active');
+});
+// Show selected page
+document.getElementById(pageId + '-page').classList.add('active');
+// Scroll to top
+window.scrollTo(0, 0);
+// Update active nav link
+document.querySelectorAll('nav a').forEach(link => {
+link.classList.remove('active');
+});
+// Add active class to clicked nav link if it exists
+const navLinks = document.querySelectorAll('nav a');
+for (let i = 0; i < navLinks.length; i++) {
+if (navLinks[i].getAttribute('onclick') === `showPage('${pageId}')`) {
+navLinks[i].classList.add('active');
+break;
+}
+}
+}
+// Form submissions
+document.getElementById('login-form')?.addEventListener('submit', function(e) {
+e.preventDefault();
+alert('Login successful! Redirecting to dashboard...');
+showPage('home');
+});
+document.getElementById('signup-form')?.addEventListener('submit', function(e) {
+e.preventDefault();
+alert('Account created successfully! Please login.');
+showPage('login');
+});
+document.getElementById('booking-form')?.addEventListener('submit', function(e) {
+e.preventDefault();
+alert('Booking confirmed! Thank you for choosing AutoRent.');
+showPage('home');
+});
+// Initialize home page as active
+window.onload = function() {
+showPage('home');
+};
+</script>
+</body>
+</html>
